@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Java Practicals — Lab File</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa6bb;
+      --accent:#7c3aed;
+      --glass: rgba(255,255,255,0.04);
+      --mono: 'Courier New', monospace;
+      --radius: 14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#071021 0%, #0f1724 60%);
+      color:#e6eef8;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:1050px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:18px;
+      padding:24px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    header{
+      grid-column: 1/-1;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:6px;
+    }
+    .logo{
+      height:86px;
+      width:86px;
+      border-radius:14px;
+      background: linear-gradient(135deg,var(--accent), #3b82f6);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      font-size:20px;
+      color:white;
+      box-shadow: 0 6px 20px rgba(124,58,237,0.2);
+    }
+    h1{
+      margin:0;
+      font-size:24px;
+      letter-spacing:0.4px;
+    }
+    p.lead{
+      margin:2px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* Left column */
+    .left{
+      background:var(--card);
+      border-radius:12px;
+      padding:16px;
+      min-height:320px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    }
+    label.small{ display:block; font-size:12px; color:var(--muted); margin-bottom:8px; }
+
+    select, .btns{
+      width:100%;
+    }
+    select{
+      background:var(--glass);
+      color:inherit;
+      border: 1px solid rgba(255,255,255,0.04);
+      padding:10px 12px;
+      border-radius:10px;
+      font-size:14px;
+      outline:none;
+    }
+
+    .list{
+      margin-top:14px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-height:42vh;
+      overflow:auto;
+      padding-right:6px;
+    }
+    .exp-btn{
+      text-align:left;
+      padding:10px 12px;
+      background:transparent;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.02);
+      color:var(--muted);
+      cursor:pointer;
+      font-size:13px;
+      transition:all .18s ease;
+    }
+    .exp-btn:hover{ transform:translateY(-3px); color:#fff; border-color: rgba(124,58,237,0.25); box-shadow: 0 6px 20px rgba(124,58,237,0.06); }
+
+    /* Right column */
+    .right{
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      border-radius:12px;
+      padding:18px;
+      min-height:400px;
+      box-shadow: 0 6px 20px rgba(2,6,23,0.55);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .meta{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .meta .pill{
+      background:rgba(255,255,255,0.03);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+      color:var(--muted);
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .aim{
+      background: linear-gradient(90deg, rgba(124,58,237,0.06), rgba(59,130,246,0.02));
+      border: 1px solid rgba(124,58,237,0.08);
+      padding:12px;
+      border-radius:10px;
+      color:#ecf2ff;
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .code-wrap{
+      margin-top:6px;
+      background: #071124;
+      border-radius:10px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,0.02);
+      position:relative;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      overflow:auto;
+    }
+    pre{
+      margin:0;
+      font-family: var(--mono);
+      font-size:13px;
+      line-height:1.45;
+      color:#dfeefe;
+      white-space:pre;
+    }
+    code{ display:block; }
+
+    .controls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    button.copy{
+      background:linear-gradient(90deg,var(--accent), #2563eb);
+      border:none;
+      color:white;
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      box-shadow: 0 6px 18px rgba(37,99,235,0.12);
+      font-weight:600;
+    }
+
+    .small-muted{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    footer.note{
+      grid-column:1/-1;
+      margin-top:8px;
+      color:var(--muted);
+      font-size:13px;
+      text-align:right;
+    }
+
+    /* responsive */
+    @media (max-width:900px){
+      .wrap{ grid-template-columns: 1fr; padding:16px;}
+      .logo{height:72px;width:72px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" role="application" aria-label="Java Practicals viewer">
+    <header>
+      <div class="logo">Java</div>
+      <div>
+        <h1>Java Practicals — Lab File</h1>
+        <p class="lead">Pick a practical to view Aim & Code. Includes all experiments from your uploaded file. :contentReference[oaicite:1]{index=1}</p>
+      </div>
+    </header>
+
+    <aside class="left" aria-label="Practical selector">
+      <label class="small" for="expSelect">Select Practical</label>
+      <select id="expSelect" aria-controls="displayArea"></select>
+
+      <div class="list" id="btnList" aria-hidden="false"></div>
+
+      <div style="margin-top:12px; font-size:12px; color:var(--muted);">
+        Original file path:
+        <div style="font-family:var(--mono); background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; margin-top:6px;">
+          /mnt/data/Javaaa.odt
+        </div>
+      </div>
+    </aside>
+
+    <main class="right" id="displayArea">
+      <div class="meta">
+        <div class="pill" id="expTitle">Experiment 1</div>
+        <div class="controls">
+          <div class="small-muted" id="expAimShort"></div>
+          <button class="copy" id="copyBtn">Copy Code</button>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:13px; color:var(--muted); margin-bottom:6px;">Aim</div>
+        <div class="aim" id="aimText"></div>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div style="font-size:13px; color:var(--muted);">Code</div>
+        <div class="small-muted">Output sections left blank (from original file).</div>
+      </div>
+
+      <div class="code-wrap" id="codeWrap">
+        <pre><code id="codeBlock" spellcheck="false"></code></pre>
+      </div>
+
+      <footer class="note">
+        Rendered from your uploaded practical file. Save this HTML to share or present.
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Data extracted from the uploaded file (Experiments 1-15).
+    const experiments = [
+      {
+        id:1,
+        title:"EXPERIMENT-1 — Hello World",
+        aim: 'WAP to print "Hello World" program using Java.',
+        code:
+`class HelloWorld {
+ public static void main(String[] args) {
+  System.out.println("Hello World");
+ }
+}`
+      },
+      {
+        id:2,
+        title:"EXPERIMENT-2 — Addition of two numbers",
+        aim: 'WAP in Java for addition of two numbers, input given by user.',
+        code:
+`import java.util.Scanner;
+
+class AddNumbers {
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  System.out.print("Enter first number: ");
+  int a = sc.nextInt();
+  System.out.print("Enter second number: ");
+  int b = sc.nextInt();
+  int sum = a + b;
+  System.out.println("Sum = " + sum);
+  sc.close();
+ }
+}`
+      },
+      {
+        id:3,
+        title:"EXPERIMENT-3 — Reverse Number",
+        aim: 'WAP to print the reverse of the numbers; the number is taken as input from the user using Java.',
+        code:
+`import java.util.Scanner;
+
+class ReverseNumber {
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  System.out.print("Enter a number: ");
+  int n = sc.nextInt();
+  int rev = 0;
+  while (n != 0) {
+   int digit = n % 10;
+   rev = rev * 10 + digit;
+   n = n / 10;
+  }
+  System.out.println("Reversed number: " + rev);
+  sc.close();
+ }
+}`
+      },
+      {
+        id:4,
+        title:"EXPERIMENT-4 — Volume of a Cube",
+        aim: 'Java program to calculate the volume of a cube, with the side length taken as input from the user.',
+        code:
+`import java.util.Scanner;
+
+class CubeVolume {
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  System.out.print("Enter side length of cube: ");
+  double side = sc.nextDouble();
+  double volume = Math.pow(side, 3);
+  System.out.println("Volume of cube = " + volume);
+  sc.close();
+ }
+}`
+      },
+      {
+        id:5,
+        title:"EXPERIMENT-5 — Area of Triangle",
+        aim: 'Using Java write a program to print the area of a triangle.',
+        code:
+`import java.util.Scanner;
+
+class TriangleArea {
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  System.out.print("Enter base: ");
+  double base = sc.nextDouble();
+  System.out.print("Enter height: ");
+  double height = sc.nextDouble();
+  double area = 0.5 * base * height;
+  System.out.println("Area of triangle = " + area);
+  sc.close();
+ }
+}`
+      },
+      {
+        id:6,
+        title:"EXPERIMENT-6 — Prime Check",
+        aim: 'Write a program to check if the number is prime or not.',
+        code:
+`import java.util.Scanner;
+
+class PrimeCheck {
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  System.out.print("Enter a number: ");
+  int num = sc.nextInt();
+  boolean isPrime = true;
+
+  if (num <= 1)
+   isPrime = false;
+  else {
+   for (int i = 2; i <= num / 2; i++) {
+    if (num % i == 0) {
+     isPrime = false;
+     break;
+    }
+   }
+  }
+
+  if (isPrime)
+   System.out.println(num + " is a Prime Number");
+  else
+   System.out.println(num + " is not a Prime Number");
+
+  sc.close();
+ }
+}`
+      },
+      {
+        id:7,
+        title:"EXPERIMENT-7 — Student Class (printData)",
+        aim: 'Write a program to create a class (class name is Student) with data as name, city, and age along with method printData to display the data.',
+        code:
+`class Student {
+ String name, city;
+ int age;
+
+ void getData(String n, String c, int a) {
+  name = n;
+  city = c;
+  age = a;
+ }
+ void printData() {
+  System.out.println("Name: " + name);
+  System.out.println("City: " + city);
+  System.out.println("Age: " + age);
+ }
+ public static void main(String[] args) {
+  Student s = new Student();
+  s.getData("Yash", "Delhi", 20);
+  s.printData();
+ }
+}`
+      },
+      {
+        id:8,
+        title:"EXPERIMENT-8 — Student Management (console)",
+        aim: 'Build a console-based Student Management program that accepts details for 10 students, computes totals and averages for each student, prints each student’s details, computes class average, and identifies the topper.',
+        code:
+`import java.util.Scanner;
+
+class Student {
+ String name;
+ int m1, m2, m3;
+ int total;
+ double avg;
+
+ void getData(Scanner sc) {
+  System.out.print("Enter name: ");
+  name = sc.next();
+  System.out.print("Enter marks in 3 subjects: ");
+  m1 = sc.nextInt();
+  m2 = sc.nextInt();
+  m3 = sc.nextInt();
+  total = m1 + m2 + m3;
+  avg = total / 3.0;
+ }
+
+ void printData() {
+  System.out.println(name + "\tTotal: " + total + "\tAverage: " + avg);
+ }
+
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  Student[] s = new Student[3];
+  for (int i = 0; i < 3; i++) {
+   s[i] = new Student();
+   s[i].getData(sc);
+  }
+
+  System.out.println("\n--- Student Details ---");
+  int topper = 0;
+  for (int i = 0; i < 3; i++) {
+   s[i].printData();
+   if (s[i].total > s[topper].total)
+    topper = i;
+  }
+
+  System.out.println("\nTopper: " + s[topper].name);
+  sc.close();
+ }
+}`
+      },
+      {
+        id:9,
+        title:"EXPERIMENT-9 — Two Objects StudentTest",
+        aim: 'Write a program to create a class Student along with 2 methods, getData and printData, to get the values through arguments and display data in printData. Create 2 objects S1 and S2 to declare and access the value from class StudentTest.',
+        code:
+`class StudentTest {
+ String name;
+ int age;
+
+ void getData(String n, int a) {
+  name = n;
+  age = a;
+ }
+
+ void printData() {
+  System.out.println("Name: " + name + ", Age: " + age);
+ }
+
+ public static void main(String[] args) {
+  StudentTest S1 = new StudentTest();
+  StudentTest S2 = new StudentTest();
+
+  S1.getData("Yash", 20);
+  S2.getData("Ravi", 21);
+
+  S1.printData();
+  S2.printData();
+ }
+}`
+      },
+      {
+        id:10,
+        title:"EXPERIMENT-10 — BankAccount with Exception",
+        aim: 'Create a BankAccount class with deposit and withdraw functions. Implement and use a user-defined exception InsufficientFundsException when withdrawal amount exceeds the balance. Provide a console menu to allow repeated operations.',
+        code:
+`import java.util.Scanner;
+
+class InsufficientFundsException extends Exception {
+ InsufficientFundsException(String s) {
+  super(s);
+ }
+}
+
+class BankAccount {
+ double balance;
+
+ void deposit(double amt) {
+  balance += amt;
+  System.out.println("Deposited: " + amt);
+ }
+
+ void withdraw(double amt) throws InsufficientFundsException {
+  if (amt > balance)
+   throw new InsufficientFundsException("Withdrawal exceeds balance!");
+  else {
+   balance -= amt;
+   System.out.println("Withdrawn: " + amt);
+  }
+ }
+
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  BankAccount acc = new BankAccount();
+
+  while (true) {
+   System.out.println("\\n1.Deposit 2.Withdraw 3.Exit");
+   System.out.print("Enter choice: ");
+   int ch = sc.nextInt();
+   if (ch == 3)
+    break;
+   System.out.print("Enter amount: ");
+   double amt = sc.nextDouble();
+   try {
+    if (ch == 1)
+     acc.deposit(amt);
+    else if (ch == 2)
+     acc.withdraw(amt);
+   } catch (InsufficientFundsException e) {
+    System.out.println(e.getMessage());
+   }
+  }
+  sc.close();
+ }
+}`
+      },
+      {
+        id:11,
+        title:"EXPERIMENT-11 — Rectangle (Constructor overloading)",
+        aim: 'To demonstrate the use of constructor and method overloading in Java by creating a class Rectangle to calculate area and perimeter.',
+        code:
+`class Rectangle {
+ double length, width;
+
+ Rectangle() {
+  length = 1;
+  width = 1;
+ }
+
+ Rectangle(double l, double w) {
+  length = l;
+  width = w;
+ }
+
+ double area() {
+  return length * width;
+ }
+
+ double perimeter() {
+  return 2 * (length + width);
+ }
+
+ public static void main(String[] args) {
+  Rectangle r1 = new Rectangle();
+  Rectangle r2 = new Rectangle(10, 5);
+  System.out.println("Default Rectangle: Area=" + r1.area() + ", Perimeter=" + r1.perimeter());
+  System.out.println("Parameterized Rectangle: Area=" + r2.area() + ", Perimeter=" + r2.perimeter());
+ }
+}`
+      },
+      {
+        id:12,
+        title:"EXPERIMENT-12 — Inheritance & Method Overriding",
+        aim: 'To demonstrate inheritance and method overriding in Java by creating a Shape superclass and Circle subclass.',
+        code:
+`import java.util.Scanner;
+
+class Shape {
+ void area() {
+  System.out.println("Area cannot be defined for generic shape.");
+ }
+}
+
+class Circle extends Shape {
+ double radius;
+
+ Circle(double r) {
+  radius = r;
+ }
+
+ void area() {
+  double a = Math.PI * radius * radius;
+  System.out.println("Area of Circle = " + a);
+ }
+
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  System.out.print("Enter radius of circle: ");
+  double r = sc.nextDouble();
+  Circle c = new Circle(r);
+  c.area();
+  sc.close();
+ }
+}`
+      },
+      {
+        id:13,
+        title:"EXPERIMENT-13 — Interfaces & Abstract Classes",
+        aim: 'To demonstrate the use of interfaces and abstract classes in Java.',
+        code:
+`interface Shape {
+ void area();
+}
+
+abstract class Polygon {
+ abstract void perimeter();
+}
+
+class Rectangle extends Polygon implements Shape {
+ double length, width;
+
+ Rectangle(double l, double w) {
+  length = l;
+  width = w;
+ }
+
+ public void area() {
+  System.out.println("Area = " + (length * width));
+ }
+
+ void perimeter() {
+  System.out.println("Perimeter = " + (2 * (length + width)));
+ }
+
+ public static void main(String[] args) {
+  Rectangle r = new Rectangle(10, 5);
+  r.area();
+  r.perimeter();
+ }
+}`
+      },
+      {
+        id:14,
+        title:"EXPERIMENT-14 — Packages (demo)",
+        aim: 'To demonstrate the creation and use of packages in Java.',
+        code:
+`class Message {
+ void display() {
+  System.out.println("Welcome to Packages in Java!");
+ }
+}
+
+public class MainPackage {
+ public static void main(String[] args) {
+  Message msg = new Message();
+  msg.display();
+ }
+}`
+      },
+      {
+        id:15,
+        title:"EXPERIMENT-15 — Exception Handling",
+        aim: 'To implement exception handling of user input and arithmetic operations in Java.',
+        code:
+`import java.util.InputMismatchException;
+import java.util.Scanner;
+
+class ExceptionHandling {
+ public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  try {
+   System.out.print("Enter numerator: ");
+   int num = sc.nextInt();
+   System.out.print("Enter denominator: ");
+   int den = sc.nextInt();
+   int result = num / den;
+   System.out.println("Result = " + result);
+  } catch (ArithmeticException e) {
+   System.out.println("Error: Division by zero not allowed!");
+  } catch (InputMismatchException e) {
+   System.out.println("Error: Please enter valid integers only!");
+  } finally {
+   sc.close();
+   System.out.println("Program ended safely.");
+  }
+ }
+}`
+      }
+    ];
+
+    // Populate select and buttons
+    const sel = document.getElementById('expSelect');
+    const btnList = document.getElementById('btnList');
+    experiments.forEach(exp=>{
+      const opt = document.createElement('option');
+      opt.value = exp.id;
+      opt.textContent = `${exp.id}. ${exp.title}`;
+      sel.appendChild(opt);
+
+      const b = document.createElement('button');
+      b.className = 'exp-btn';
+      b.textContent = `${exp.id}. ${exp.title}`;
+      b.onclick = ()=> selectExp(exp.id);
+      btnList.appendChild(b);
+    });
+
+    // initial
+    function selectExp(id){
+      const exp = experiments.find(e=>e.id===Number(id));
+      if(!exp) return;
+      document.getElementById('expTitle').textContent = `Experiment ${exp.id}`;
+      document.getElementById('aimText').textContent = exp.aim;
+      document.getElementById('codeBlock').textContent = exp.code;
+      document.getElementById('expAimShort').textContent = exp.title;
+      sel.value = exp.id;
+    }
+
+    sel.addEventListener('change', (e)=> selectExp(e.target.value));
+    document.getElementById('copyBtn').addEventListener('click', ()=>{
+      const code = document.getElementById('codeBlock').textContent;
+      navigator.clipboard.writeText(code).then(()=> {
+        const orig = document.getElementById('copyBtn').textContent;
+        document.getElementById('copyBtn').textContent = 'Copied!';
+        setTimeout(()=> document.getElementById('copyBtn').textContent = 'Copy Code', 1100);
+      }).catch(()=> {
+        alert('Unable to copy. Select and copy manually.');
+      });
+    });
+
+    // show first
+    selectExp(1);
+  </script>
+</body>
+</html>

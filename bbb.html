@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DBMS Practicals - Practical File</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:linear-gradient(90deg,#06b6d4,#7c3aed);
+      --glass: rgba(255,255,255,0.04);
+      --muted:#a7b0bf;
+      --radius:14px;
+      --shadow: 0 6px 18px rgba(2,6,23,0.6);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      background: radial-gradient(1200px 400px at 10% 10%, rgba(124,58,237,0.12), transparent),
+                  radial-gradient(800px 300px at 90% 90%, rgba(6,182,212,0.06), transparent),
+                  linear-gradient(180deg,#071025 0%, #071a2a 100%);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      padding:32px;
+    }
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:22px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:14px
+    }
+    .logo{
+      width:68px;height:68px;border-radius:14px;background:var(--glass);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04)
+    }
+    .logo h1{margin:0;color:transparent;background:var(--accent);-webkit-background-clip:text;background-clip:text;font-size:20px}
+    .title{line-height:1}
+    .title h2{margin:0;font-size:22px;letter-spacing:0.6px}
+    .title p{margin:0;color:var(--muted);font-size:13px}
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .controls{
+      display:flex;gap:12px;align-items:center
+    }
+    select, .btn{
+      appearance:none;border:0;padding:10px 14px;border-radius:12px;background:var(--glass);color:inherit;font-weight:600;cursor:pointer
+    }
+    .btn.primary{background:var(--accent);color:white;padding:10px 16px}
+
+    main{
+      display:grid;grid-template-columns:360px 1fr;gap:18px;margin-top:18px
+    }
+
+    .sidebar{min-height:420px}
+    .practical-list{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+    .practical-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:rgba(255,255,255,0.015);cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+    .practical-item:hover{transform:translateY(-4px);transition:all .18s}
+
+    .content-area{padding:18px;min-height:420px}
+    .section{margin-bottom:16px}
+    .section h3{margin:0 0 8px 0}
+    .aim{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;border:1px dashed rgba(255,255,255,0.02);color:var(--muted)}
+
+    pre{background:rgba(0,0,0,0.35);padding:14px;border-radius:8px;overflow:auto;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace}
+
+    .code-actions{display:flex;gap:10px;margin-top:8px}
+    button.copy{padding:8px 10px;border-radius:8px;border:0;background:rgba(255,255,255,0.04);cursor:pointer}
+
+    .images-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .images-grid img{width:100%;border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
+
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+
+    /* Responsive */
+    @media (max-width:920px){main{grid-template-columns:1fr;}.sidebar{order:2}} 
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo"><h1>DB</h1></div>
+        <div class="title">
+          <h2>DBMS</h2>
+          <p>Practical File — Aim + Code</p>
+        </div>
+      </div>
+      <div class="controls card">
+        <label for="select-mode" style="font-size:13px;color:var(--muted);margin-right:8px">View:</label>
+        <select id="select-mode">
+          <option value="both">Aim + Code</option>
+          <option value="aim">Only Aim</option>
+          <option value="code">Only Code</option>
+        </select>
+        <button class="btn primary" onclick="openAllDocs()">Download All</button>
+      </div>
+    </header>
+
+    <main>
+      <aside class="sidebar card">
+        <h3>Practicals</h3>
+        <p style="color:var(--muted);font-size:13px;margin-top:6px">Select a practical to view Aim and Code. Replace placeholders with content from your DOCX and code photos.</p>
+        <div class="practical-list" id="practicalList"></div>
+      </aside>
+
+      <section class="content-area card" id="contentArea">
+        <div class="section">
+          <h3 id="pTitle">Practical 1 — Sample</h3>
+          <div class="aim" id="pAim">Aim will appear here. Please paste the aim from your DOCX or let me know to extract it for you.</div>
+        </div>
+
+        <div class="section" id="codeSection">
+          <h3>Code / Script</h3>
+          <div>
+            <!-- This pre tag is for textual code. If your code is in photos, paste the OCR/text here or replace the <img> below -->
+            <pre id="pCode">-- Paste code here --</pre>
+            <div class="code-actions">
+              <button class="copy" onclick="copyCode()">Copy Code</button>
+              <button class="copy" onclick="toggleCodeImage()">Toggle Code Image</button>
+            </div>
+          </div>
+
+          <div id="codeImageWrap" style="margin-top:12px;display:none">
+            <p style="color:var(--muted);font-size:13px;margin-bottom:8px">Code Image (replace the src with your scanned photo file):</p>
+            <img id="codeImg" src="images/exp1_code.jpg" alt="Code image placeholder" style="width:100%;border-radius:8px"/>
+          </div>
+        </div>
+
+        <div class="section" id="erSection">
+          <h3>ER Diagram (for Exp 2 / 3 / 4)</h3>
+          <p style="color:var(--muted);font-size:13px">I placed example ER diagram images. Replace these <code>&lt;img&gt;</code> src attributes with Google image URLs or downloaded image filenames.</p>
+          <div class="images-grid">
+            <!-- The user asked: for Exp 234, insert ER images using <img>. These are placeholder images. Replace with google image links or local files. -->
+            <div>
+              <p style="margin:6px 0 6px 0">Exp 2 - ER Diagram</p>
+              <img src="https://via.placeholder.com/600x350?text=ER+Diagram+Exp+2+-+Replace+with+Google+Image" alt="ER Exp2"/>
+            </div>
+            <div>
+              <p style="margin:6px 0 6px 0">Exp 3 - ER Diagram</p>
+              <img src="https://via.placeholder.com/600x350?text=ER+Diagram+Exp+3+-+Replace+with+Google+Image" alt="ER Exp3"/>
+            </div>
+            <div>
+              <p style="margin:6px 0 6px 0">Exp 4 - ER Diagram</p>
+              <img src="https://via.placeholder.com/600x350?text=ER+Diagram+Exp+4+-+Replace+with+Google+Image" alt="ER Exp4"/>
+            </div>
+            <div>
+              <p style="margin:6px 0 6px 0">Extra / Notes</p>
+              <img src="https://via.placeholder.com/600x350?text=Replace+with+actual+ER+or+diagram" alt="ER extra"/>
+            </div>
+          </div>
+        </div>
+
+        <footer>
+          Tip: To insert your scanned code photos, put them in an "images" folder and update the <code>src</code> in the code image tag. If you want me to fill aims and paste code from your DOCX and images, upload the DOCX and photos here and I'll update the page.
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Sample list of practicals. I created 12 placeholders — replace text with actual aims & code.
+    const practicals = [];
+    for(let i=1;i<=12;i++){
+      practicals.push({
+        id:i,
+        title:`Practical ${i}`,
+        aim:`(Replace) Aim of Practical ${i} — paste exact aim from your DOCX here.`,
+        codeText:`-- Paste code for Practical ${i} here --`,
+        codeImage:`images/exp${i}_code.jpg` // replace with your scanned photo file
+      });
+    }
+
+    const listEl = document.getElementById('practicalList');
+    const pTitle = document.getElementById('pTitle');
+    const pAim = document.getElementById('pAim');
+    const pCode = document.getElementById('pCode');
+    const codeImg = document.getElementById('codeImg');
+    const codeWrap = document.getElementById('codeImageWrap');
+
+    function buildList(){
+      practicals.forEach(p=>{
+        const div = document.createElement('div');
+        div.className='practical-item';
+        div.innerHTML = `<div><strong>${p.title}</strong><div style='font-size:12px;color:var(--muted);margin-top:6px'>Click to open</div></div><div style='font-size:13px;color:var(--muted)'>#${p.id}</div>`;
+        div.onclick = ()=>openPractical(p.id);
+        listEl.appendChild(div);
+      })
+    }
+    function openPractical(id){
+      const p = practicals.find(x=>x.id===id);
+      if(!p) return;
+      pTitle.textContent = `${p.title}`;
+      pAim.textContent = p.aim;
+      pCode.textContent = p.codeText;
+      codeImg.src = p.codeImage;
+      // show/hide based on mode
+      applyMode();
+    }
+
+    function copyCode(){
+      const text = pCode.textContent;
+      navigator.clipboard.writeText(text).then(()=>{
+        alert('Code copied to clipboard');
+      }).catch(()=>alert('Copy failed — please select and copy manually'));
+    }
+
+    function toggleCodeImage(){
+      codeWrap.style.display = codeWrap.style.display==='none' ? 'block' : 'none';
+    }
+
+    function applyMode(){
+      const mode = document.getElementById('select-mode').value;
+      const aimSection = document.getElementById('pAim').parentElement.parentElement;
+      const codeSection = document.getElementById('codeSection');
+      if(mode==='aim'){
+        aimSection.style.display='block';
+        codeSection.style.display='none';
+      }else if(mode==='code'){
+        aimSection.style.display='none';
+        codeSection.style.display='block';
+      }else{aimSection.style.display='block';codeSection.style.display='block'}
+    }
+
+    document.getElementById('select-mode').addEventListener('change',applyMode);
+
+    function openAllDocs(){
+      alert('This button is a placeholder. If you upload the DOCX/images I can generate downloads (ZIP / PDF) with all aims and codes filled in.');
+    }
+
+    buildList();
+    openPractical(1);
+  </script>
+</body>
+</html>
